@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*;
 import com.senati.cavosh_cafe.application.dto.RegistrarseDTO;
 import com.senati.cavosh_cafe.application.exception.CorreoExistenteException;
 import com.senati.cavosh_cafe.application.mapper.UsuarioMapper;
+import com.senati.cavosh_cafe.application.port.PasswordHasher;
 import com.senati.cavosh_cafe.application.usecase.Autenticacion.RegistrarseUseCase;
 import com.senati.cavosh_cafe.domain.entity.Usuario;
 import com.senati.cavosh_cafe.domain.repository.UsuarioRepository;
@@ -18,13 +19,15 @@ public class RegistrarseUseCaseTest {
 
     private UsuarioRepository repository;
     private UsuarioMapper mapper;
+    private PasswordHasher hasher;
     private RegistrarseUseCase useCase;
 
     @BeforeEach
     void init() {
         repository = mock(UsuarioRepository.class);
         mapper = mock(UsuarioMapper.class);
-        useCase = new RegistrarseUseCase(repository, mapper);
+        hasher = mock(PasswordHasher.class);
+        useCase = new RegistrarseUseCase(repository, mapper, hasher);
     }
 
     @Test
@@ -39,10 +42,13 @@ public class RegistrarseUseCaseTest {
                 null,
                 "Josue",
                 "josue@gmail.com",
-                "123456");
+                "hashed_password");
 
         when(repository.existePorCorreo("josue@gmail.com"))
                 .thenReturn(false);
+
+        when(hasher.encode("123456"))
+                .thenReturn("hashed_password");
 
         when(mapper.toEntity(dto))
                 .thenReturn(usuario);
