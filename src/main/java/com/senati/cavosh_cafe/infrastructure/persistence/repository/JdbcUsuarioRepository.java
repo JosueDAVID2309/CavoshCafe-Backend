@@ -1,9 +1,13 @@
 package com.senati.cavosh_cafe.infrastructure.persistence.repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.senati.cavosh_cafe.domain.entity.Usuario;
@@ -25,13 +29,13 @@ public class JdbcUsuarioRepository implements UsuarioRepository {
 
         try {
             Usuario usuario = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-                        Usuario u = new Usuario();
-                        u.setId(rs.getLong("id"));
-                        u.setNombre_completo(rs.getString("nombre_completo"));
-                        u.setCorreo(rs.getString("correo"));
-                        u.setContrasena(rs.getString("contrasena"));
-                        return u;
-                    }, correo);
+                Usuario u = new Usuario();
+                u.setId(rs.getLong("id"));
+                u.setNombre_completo(rs.getString("nombre_completo"));
+                u.setCorreo(rs.getString("correo"));
+                u.setContrasena(rs.getString("contrasena"));
+                return u;
+            }, correo);
 
             return Optional.of(usuario);
 
@@ -41,14 +45,25 @@ public class JdbcUsuarioRepository implements UsuarioRepository {
     }
 
     @Override
-    public void registrarUsuario(Usuario usuario) {
+    public Long registrarUsuario(Usuario usuario) {
+        String sql = """
+                INSERT INTO Usuario(nombre_completo, correo, contrasena)
+                VALUES (?, ?, ?)
+                """;
 
-        String sql = "INSERT INTO Usuario(nombre_completo, correo, contrasena) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(sql,
-                usuario.getNombre_completo(),
-                usuario.getCorreo(),
-                usuario.getContrasena());
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+
+            ps.setString(1, usuario.getNombre_completo());
+            ps.setString(2, usuario.getCorreo());
+            ps.setString(3, usuario.getContrasena());
+
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
     @Override
