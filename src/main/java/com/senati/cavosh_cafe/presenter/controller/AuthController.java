@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.senati.cavosh_cafe.application.dto.IniciarSesionDTO;
 import com.senati.cavosh_cafe.application.dto.RegistrarseDTO;
 import com.senati.cavosh_cafe.application.usecase.Autenticacion.IniciarSesionUseCase;
-import com.senati.cavosh_cafe.application.usecase.Autenticacion.RegistrarseUseCase;
+import com.senati.cavosh_cafe.infrastructure.service.RegistrarseService;
 import com.senati.cavosh_cafe.presenter.mapper.AuthMapper;
 import com.senati.cavosh_cafe.presenter.request.IniciarSesionRequest;
 import com.senati.cavosh_cafe.presenter.request.RegistrarseRequest;
@@ -25,13 +25,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/auth")
 public class AuthController {
     private final IniciarSesionUseCase iniciarSesionUseCase;
-    private final RegistrarseUseCase registrarseUseCase;
+    private final RegistrarseService registrarseService;
     private final AuthMapper mapper;
 
-    public AuthController(IniciarSesionUseCase iniciarSesionUseCase, RegistrarseUseCase registrarseUseCase,
+    public AuthController(IniciarSesionUseCase iniciarSesionUseCase, RegistrarseService registrarseService,
             AuthMapper mapper) {
         this.iniciarSesionUseCase = iniciarSesionUseCase;
-        this.registrarseUseCase = registrarseUseCase;
+        this.registrarseService = registrarseService;
         this.mapper = mapper;
     }
 
@@ -45,7 +45,7 @@ public class AuthController {
         ResponseCookie cookie = ResponseCookie
                 .from("access_token", accessToken)
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
                 .sameSite("Lax")
                 .path("/")
                 .maxAge(Duration.ofHours(1))
@@ -61,10 +61,10 @@ public class AuthController {
 
         RegistrarseDTO dto = mapper.toDto(request);
 
-        registrarseUseCase.execute(dto);
+        registrarseService.execute(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-        .body(new ApiResponse<>(true, null, "Usuario registrado correctamente"));
+                .body(new ApiResponse<>(true, null, "Usuario registrado correctamente"));
     }
 
 }

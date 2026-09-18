@@ -1,26 +1,24 @@
 package com.senati.cavosh_cafe.domain.entity;
 
-import java.util.Optional;
-
 public class DetallesCarrito {
 
     private Long idDetallesCarrito;
     private Long idCarrito;
     private Long idProducto;
     private Integer cantidad;
-    private Leche leche;
-    private Crema crema;
+    private Long idLeche;
+    private Long idCrema;
     private boolean conCafeina;
     private Long idSucursal;
 
     public DetallesCarrito(Long idDetallesCarrito, Long idCarrito, Long idProducto, Integer cantidad,
-            Leche leche, Crema crema, boolean conCafeina, Long idSucursal) {
+            Long idLeche, Long idCrema, boolean conCafeina, Long idSucursal) {
         this.idDetallesCarrito = idDetallesCarrito;
         this.idCarrito = idCarrito;
         this.idProducto = idProducto;
         this.cantidad = cantidad;
-        this.leche = leche;
-        this.crema = crema;
+        this.idLeche = idLeche;
+        this.idCrema = idCrema;
         this.conCafeina = conCafeina;
         this.idSucursal = idSucursal;
     }
@@ -60,20 +58,20 @@ public class DetallesCarrito {
         this.cantidad = cantidad;
     }
 
-    public Leche getLeche() {
-        return leche;
+    public Long getIdLeche() {
+        return idLeche;
     }
 
-    public void setLeche(Leche leche) {
-        this.leche = leche;
+    public void setIdLeche(Long idLeche) {
+        this.idLeche = idLeche;
     }
 
-    public Crema getCrema() {
-        return crema;
+    public Long getIdCrema() {
+        return idCrema;
     }
 
-    public void setCrema(Crema crema) {
-        this.crema = crema;
+    public void setIdCrema(Long idCrema) {
+        this.idCrema = idCrema;
     }
 
     public boolean getConCafeina() {

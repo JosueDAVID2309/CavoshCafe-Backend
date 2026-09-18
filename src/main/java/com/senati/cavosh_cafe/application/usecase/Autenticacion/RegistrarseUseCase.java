@@ -5,22 +5,26 @@ import com.senati.cavosh_cafe.application.exception.CorreoExistenteException;
 import com.senati.cavosh_cafe.application.mapper.UsuarioMapper;
 import com.senati.cavosh_cafe.application.port.PasswordHasher;
 import com.senati.cavosh_cafe.domain.entity.Usuario;
+import com.senati.cavosh_cafe.domain.repository.CarritoRepository;
 import com.senati.cavosh_cafe.domain.repository.UsuarioRepository;
 
 public class RegistrarseUseCase {
     private final UsuarioRepository repository;
+    private final CarritoRepository carritoRepository;
     private final UsuarioMapper mapper;
     private final PasswordHasher hasher;
 
-    public RegistrarseUseCase(UsuarioRepository repository, UsuarioMapper mapper, PasswordHasher hasher){
+    public RegistrarseUseCase(UsuarioRepository repository, CarritoRepository carritoRepository, UsuarioMapper mapper,
+            PasswordHasher hasher) {
         this.repository = repository;
+        this.carritoRepository = carritoRepository;
         this.mapper = mapper;
         this.hasher = hasher;
     }
 
-    public void execute(RegistrarseDTO dto){
-        
-        if(repository.existePorCorreo(dto.getCorreo())){
+    public void execute(RegistrarseDTO dto) {
+
+        if (repository.existePorCorreo(dto.getCorreo())) {
             throw new CorreoExistenteException();
         }
 
@@ -28,6 +32,7 @@ public class RegistrarseUseCase {
 
         Usuario usuario = mapper.toEntity(dto);
 
-        repository.registrarUsuario(usuario);
+        Long idUsuario = repository.registrarUsuario(usuario);
+        carritoRepository.crearCarrito(idUsuario);
     }
 }

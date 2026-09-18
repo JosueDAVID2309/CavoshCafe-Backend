@@ -10,6 +10,9 @@ public class Producto {
     private Long idCategoria;
     private LocalDate added_at;
 
+    public Producto() {
+    }
+
     public Producto(Long id, String nombre, String descripcion, Double precio, Long idCategoria, LocalDate added_at) {
         this.id = id;
         this.nombre = nombre;

@@ -7,7 +7,10 @@ public class Carrito {
     private Double subtotal;
     private Double descuento;
 
-    public Carrito(Long idCarrito, Long idUsuario, Double subtotal, Double descuento) {
+    public Carrito() {
+    }
+
+    public Carrito(Long idCarrito, Long idUsuario, Double subtotal, Double descuento, Double total) {
         this.idCarrito = idCarrito;
         this.idUsuario = idUsuario;
         this.subtotal = subtotal;

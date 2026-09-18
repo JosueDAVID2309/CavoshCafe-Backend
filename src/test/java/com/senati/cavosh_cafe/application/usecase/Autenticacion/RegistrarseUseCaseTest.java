@@ -16,6 +16,7 @@ import com.senati.cavosh_cafe.application.exception.CorreoExistenteException;
 import com.senati.cavosh_cafe.application.mapper.UsuarioMapper;
 import com.senati.cavosh_cafe.application.port.PasswordHasher;
 import com.senati.cavosh_cafe.domain.entity.Usuario;
+import com.senati.cavosh_cafe.domain.repository.CarritoRepository;
 import com.senati.cavosh_cafe.domain.repository.UsuarioRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,6 +24,9 @@ public class RegistrarseUseCaseTest {
 
     @Mock
     private UsuarioRepository repository;
+
+    @Mock
+    private CarritoRepository carritoRepository;
 
     @Mock
     private UsuarioMapper mapper;
@@ -65,6 +69,7 @@ public class RegistrarseUseCaseTest {
         when(repository.existePorCorreo(registrarseDTO.getCorreo())).thenReturn(false);
         when(hasher.encode("password123")).thenReturn("encoded_password");
         when(mapper.toEntity(registrarseDTO)).thenReturn(usuario);
+        when(repository.registrarUsuario(usuario)).thenReturn(1L);
 
         // Act
         registrarseUseCase.execute(registrarseDTO);
@@ -72,6 +77,7 @@ public class RegistrarseUseCaseTest {
         // Assert
         assertEquals("encoded_password", registrarseDTO.getContrasena());
         verify(repository).registrarUsuario(usuario);
+        verify(carritoRepository).crearCarrito(1L);
         verify(hasher).encode("password123");
         verify(mapper).toEntity(registrarseDTO);
     }
