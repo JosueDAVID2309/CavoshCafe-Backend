@@ -56,7 +56,7 @@ public class AuthControllerTest {
         request.setContrasena("password");
 
         IniciarSesionDTO dto = new IniciarSesionDTO();
-        
+
         when(mapper.toDto(any(IniciarSesionRequest.class))).thenReturn(dto);
         when(iniciarSesionUseCase.execute(dto)).thenReturn("fake_token");
 
@@ -79,7 +79,7 @@ public class AuthControllerTest {
         request.setNombre_completo("Test User");
 
         RegistrarseDTO dto = new RegistrarseDTO();
-        
+
         when(mapper.toDto(any(RegistrarseRequest.class))).thenReturn(dto);
         doNothing().when(registrarseUseCase).execute(dto);
 
