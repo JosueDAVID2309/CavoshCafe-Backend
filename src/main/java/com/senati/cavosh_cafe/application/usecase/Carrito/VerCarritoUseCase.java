@@ -1,19 +1,19 @@
 package com.senati.cavosh_cafe.application.usecase.Carrito;
 
-import com.senati.cavosh_cafe.application.exception.CarritoNoEncontradoException;
-import com.senati.cavosh_cafe.domain.entity.Carrito;
-import com.senati.cavosh_cafe.domain.repository.CarritoRepository;
+import java.util.List;
+
+import com.senati.cavosh_cafe.application.dto.ProductosCarritoDTO;
+import com.senati.cavosh_cafe.application.port.DetallesCarritoQuery;
 
 public class VerCarritoUseCase {
 
-    private final CarritoRepository carritoRepository;
+    private final DetallesCarritoQuery detallesCarritoQuery;
 
-    public VerCarritoUseCase(CarritoRepository carritoRepository) {
-        this.carritoRepository = carritoRepository;
+    public VerCarritoUseCase(final DetallesCarritoQuery detallesCarritoQuery){
+        this.detallesCarritoQuery = detallesCarritoQuery;
     }
 
-    public Carrito ejecutar(Long idUsuario) {
-        return carritoRepository.obtenerCarritoPorIdUsuario(idUsuario)
-                .orElseThrow(() -> new CarritoNoEncontradoException());
+    public List<ProductosCarritoDTO> execute(Long idCarrito){
+        return detallesCarritoQuery.obtenerDetallesCarrito(idCarrito);
     }
 }
