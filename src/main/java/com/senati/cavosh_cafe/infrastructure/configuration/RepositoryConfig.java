@@ -15,4 +15,5 @@ public class RepositoryConfig {
         return new JdbcUsuarioRepository(jdbcTemplate);
     }
 
+    
 }
